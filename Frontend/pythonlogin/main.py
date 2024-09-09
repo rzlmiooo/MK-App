@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session ,  flash ,jsonify,send_from_directory
 from flask_mysqldb import MySQL
-from .static_routes import static_routes  
+from .static_routes import static_routes 
+from werkzeug.utils import secure_filename 
 import MySQLdb.cursors, re, hashlib
 from flask_login import  LoginManager,UserMixin,login_required,current_user,login_manager
 from urllib.parse import urlparse, urljoin
@@ -14,8 +15,9 @@ app = Flask(__name__)
 
 app.register_blueprint(static_routes)
 
-app.config['UPLOAD_FOLDER'] =os.getenv ('UPLOAD_FOLDER')
+app.config['UPLOAD_FOLDER'] =os.getenv ('UPLOAD_FOLDER') 
 
+print("Upload folder is set to:", app.config['UPLOAD_FOLDER'])
 # Change this to your secret key (it can be anything, it's for extra protection)
 app.secret_key =os.getenv( 'SECRET_KEY')
 
@@ -28,10 +30,6 @@ mysql = MySQL(app)
 @app.route('/')
 def index():
     return "Hello, World!"
-
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('static', filename)
 
 @app.route('/pythonlogin/admin', methods=['GET', 'POST'])
 def admin():
@@ -137,10 +135,14 @@ def register():
             account = cursor.fetchone()
             if not os.path.exists(app.config['UPLOAD_FOLDER']):
                 os.makedirs(app.config['UPLOAD_FOLDER'])
-
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-            print(f"Saving file to: {file_path}")
-            image.save(file_path)
+            if image:
+                filename = secure_filename(image.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                print(f"Saving file to: {file_path}")
+                file_path = os.path.relpath(file_path, start=os.path.dirname(__file__)) 
+                image.save(file_path)
+            else:
+                file_path = ''
 
             if account:
                 msg = 'Account already exists!'
@@ -156,7 +158,7 @@ def register():
                 INSERT INTO accounts (username, image, password, email, role)
                 VALUES (%s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql, (username, file_path, password, email, role))
+            cursor.execute(sql, (username, file_path, password, email, role))
             connection.commit()
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
@@ -197,19 +199,28 @@ def profile(user_id):
         return render_template('profile.html', account=account,image_path=image_path,msg=msg)
     return redirect(url_for('login'))
 
-
 @app.route('/pythonlogin/edit-profile/<int:user_id>', methods=['GET', 'POST'])
 def edit_profile(user_id):
     if 'loggedin' in session and session['id'] == user_id:
         if request.method == 'POST':
             username = request.form['username']
             email = request.form['email']
+            image = request.files['image']
+            password = request.form['password']
+
+            if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
+            
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            print(f"Saving file to: {file_path}")
+            image.save(file_path)
+            
             cur = mysql.connection.cursor()
             cur.execute("""
                 UPDATE accounts
-                SET username = %s, email = %s
+                SET username = %s, email = %s,image = %s,password = %s
                 WHERE id = %s
-            """, (username, email, user_id))
+            """, (username, email,password, file_path,user_id))
             mysql.connection.commit()
             cur.close()
             flash('Profile updated successfully!')
@@ -220,8 +231,6 @@ def edit_profile(user_id):
         account = cur.fetchone()
         cur.close()
         return render_template('edit.html', account=account)
-    return redirect(url_for('login'))
-
-#SearchEngine
+    return redirect(url_for('home'))
 if __name__ == '__main__':
     app.run(debug=True)

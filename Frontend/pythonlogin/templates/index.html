@@ -21,8 +21,8 @@
 			<h1 class="subheadline">Login sek yo</h1>
 			
 			<form action="{{ url_for('login') }}" method="post">
-				<label for="uname">Email or Username</label>
-				<input type="text" name="username" placeholder="Username" id="username" required class="box">
+				<label for="username">Email or Username</label>
+				<input type="text"  name="username" placeholder="Username" id="username" required class="box">
 				<label for="psw" class="psw">Password</label>
 				<input type="password" name="password" placeholder="Password" id="password" required class="box">
 				<div class="msg">{{ msg }}</div>
