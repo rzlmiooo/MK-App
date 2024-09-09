@@ -9,18 +9,35 @@
     <title>Edit Profile</title>
 </head>
 <body>
-    
+    <nav class="sidebar">
+        <div id="wtf">
+            <h1 id="info">INFORMASI AKUN</h1>
+            <h2 id="profil"><a href="{{ url_for('edit_profile', user_id=account[0]) }}">Edit profil</a></h2>
+            <h2 id="beranda"><a href="{{ url_for('home') }}">Beranda</a></h2>
+            <h2 id="keluar"><a href="{{ url_for('logout') }}" onclick="alert('Ingin Keluar?')">Log out</a></h2>
+        </div>
+    </nav>
+    <main>
     {% if account %}
-    <form action="{{ url_for('edit_profile', user_id=account[0]) }}" method="post">
-        <h1 id="info">Edit Profile</h1>
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" value="{{ account[1] }}" required><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" value="{{ account[2] }}" required><br>
-        <button type="submit">Update Profile</button>
-    </form>
-{% else %}
-    <p>Profile not found.</p>
-{% endif %}
+        <form action="{{ url_for('edit_profile', user_id=account[0]) }}" method="post">
+            <h1 id="edit">Edit Profile</h1>
+            <div class="avatar"></div>
+            <div class="name">
+                <label for="username">Ganti Username:</label>
+                <input type="text" id="username" name="username" value="{{ account[1] }}" required>
+            </div>
+            <div class="mail">
+                <label for="email">Ganti Email:</label>
+                <input type="email" id="email" name="email" value="{{ account[2] }}" required>
+            </div>
+            <div class="phone"></div>
+            <div class="house"></div>
+            <div class="pay"></div>
+            <button type="submit">Update Profile</button>
+        </form>
+    {% else %}
+        <p>Profile not found.</p>
+    {% endif %}
+    </main>
 </body>
 </html>

@@ -5,41 +5,63 @@
 }
 
 body {
-    margin: 1em;
-    padding: 1em;
     background-color: #1b1b1b;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 15pt;
     font-family: "Poppins", Arial, Helvetica, sans-serif;
-    
 }
 
-form {
-    margin: 0 auto;
-    padding: 1em 1em;
-    border-radius: 1em;
-    background-color: #d6b886;
+.sidebar {
+    display: inline;
+    height: 100vh;
+    width: 30%;
+    position: fixed;    
+    background-color: #d6b086;
 }
 
-#info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
+a {
+    text-transform: uppercase;
+    text-decoration: none;
     color: #1b1b1b;
 }
 
-#username, #email {
-    width: 100%;
-    padding: 0.2em 1em;
-    margin: 0.5em 0;
-    display: inline-block;
-    border: 1.5px solid black;
-    border-radius: 0.5em;
+#wtf {
+    margin: 0 2.5em ;
+}
+
+#info {
+    margin: 1.5em auto;
+    font-size: 30pt;
+}
+
+#profil {
+    margin: 1.5em auto;
+    font-size: 15pt;
+}
+
+#beranda {
+    margin: 1.5em auto;
+    font-size: 15pt;
+}
+
+#keluar {
+    margin: 1.5em auto;
+    font-size: 15pt;
+}
+
+form {
+    margin: 4em 4em 4em 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 4em;
+    align-content: center;
+    color: #ffffff;
+}
+
+.name, .mail {
+    display: flex;
+    justify-content: space-between;
 }
 
 button {
