@@ -54,7 +54,7 @@ form {
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    gap: 4em;
+    gap: 1em;
     align-content: center;
     color: #ffffff;
 }

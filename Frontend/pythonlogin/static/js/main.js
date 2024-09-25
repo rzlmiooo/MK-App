@@ -1,7 +1,7 @@
 document.getElementById('menuButton').addEventListener('click', function() {
     var sidebar = document.getElementById('sidebar');
     if (sidebar.style.display === 'none' || sidebar.style.display === '') {
-        sidebar.style.display = 'block';
+        sidebar.style.display = 'flex';
     } else {
         sidebar.style.display = 'none';
     }
